@@ -26,7 +26,11 @@
       <tbody>
         <tr v-for="(task, index) in tasks" :key="index">
           <td>{{ task.name }}</td>
-          <td>{{ task.status }}</td>
+          <td style="width: 120px">
+            <span @click="changeStatus(index)" class="pointer">{{
+              firstCharUpper(task.status)
+            }}</span>
+          </td>
           <td @click="editTask(index)" class="text-center">
             <i class="fa fa-pen"></i>
           </td>
@@ -50,6 +54,7 @@ export default {
     return {
       task: "",
       editedTask: null,
+      statuses: ["todo", "in-progress", "finished"],
       tasks: [
         {
           name: "Search about Vue.",
@@ -88,8 +93,23 @@ export default {
       this.task = this.tasks[index].name;
       this.editedTask = index;
     },
+
+    changeStatus(index) {
+      let newIndex = this.statuses.indexOf(this.tasks[index].status);
+
+      if (++newIndex > 2) newIndex = 0;
+      this.tasks[index].status = this.statuses[newIndex];
+    },
+
+    firstCharUpper(str) {
+      return str.charAt(0).toUpperCase() + str.slice(1);
+    },
   },
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.pointer {
+  cursor: pointer;
+}
+</style>
