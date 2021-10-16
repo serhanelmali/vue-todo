@@ -27,8 +27,12 @@
         <tr v-for="(task, index) in tasks" :key="index">
           <td>{{ task.name }}</td>
           <td>{{ task.status }}</td>
-          <td class="text-center"><i class="fa fa-pen"></i></td>
-          <td class="text-center"><i class="fa fa-trash"></i></td>
+          <td @click="editTask(index)" class="text-center">
+            <i class="fa fa-pen"></i>
+          </td>
+          <td @click="deleteTask(index)" class="text-center">
+            <i class="fa fa-trash"></i>
+          </td>
         </tr>
       </tbody>
     </table>
@@ -45,6 +49,7 @@ export default {
   data() {
     return {
       task: "",
+      editedTask: null,
       tasks: [
         {
           name: "Search about Vue.",
@@ -60,13 +65,28 @@ export default {
 
   methods: {
     submitTask() {
-      if (this.task.length > 0)
+      if (this.task.length === 0) return;
+
+      if (this.editedTask === null)
         this.tasks.push({
           name: this.task,
           status: "to-do",
         });
+      else {
+        this.tasks[this.editedTask].name = this.task;
+        this.editedTask = null;
+      }
 
-      return;
+      this.task = "";
+    },
+
+    deleteTask(index) {
+      this.tasks.splice(index, 1);
+    },
+
+    editTask(index) {
+      this.task = this.tasks[index].name;
+      this.editedTask = index;
     },
   },
 };
